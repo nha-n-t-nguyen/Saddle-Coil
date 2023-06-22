@@ -1,0 +1,27 @@
+FlexPDE Version 6.36s/W32  14:13:44 Jan  8 2015
+(Times listed are wall-clock times, not charged CPU).
+
+START E:\Homework\Magnet Design and Optimization\MiniProject\Mini_Project_Model.pde  16:11:27 4/6/17
+Using 4 Thread(s)
+ +00:00:00| Newton Step 1 Error= 4.464e-4
+ +00:00:00| Newton Step 2 Error= 4.494e-4
+ +00:00:00| Newton Step 3 Error= 0.004456
+ +00:00:00| Newton Step 4 Error= 0.002986
+ +00:00:01| Newton Step 5 Error= 0.002875
+ +00:00:01| Newton Step 6 Error= 0.002272
+ +00:00:01| Newton Step 7 Error= 0.003382
+ +00:00:01| Newton Step 8 Error= 0.004387
+ +00:00:01| Newton Step 9 Error= 0.005239
+ +00:00:01| Newton Step 10 Error= 0.005215
+ +00:00:01| Newton Step 11 Error= 0.005487
+ +00:00:01| Newton Step 12 Error= 0.001668
+ +00:00:01| Newton Step 13 Error= 1.921e-4
+ +00:00:01| Newton Step 14 Error= 5.017e-5
+ +00:00:01| Newton Step 15 Error= 1.298e-5
+ +00:00:01| Newton Step 16 Error= 3.312e-6
+ +00:00:01| Newton Step 17 Error= 8.415e-7
+ +00:00:01| GRID 1 Nodes=590 Cells=273 RMS ERR= 0.004915 MAX ERR= 0.006978 MEM=754
+ +00:00:01| Newton Step 1 Error= 5.015e-7
+ +00:00:01| Newton Step 2 Error= 3.394e-9
+ +00:00:01| GRID 2 Nodes=710 Cells=333 RMS ERR= 9.618e-4 MAX ERR= 0.001349 MEM=833
+ +00:00:01| --DONE-- 16:11:28 4/6/17

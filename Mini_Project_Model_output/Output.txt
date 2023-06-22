@@ -1,0 +1,11 @@
+{
+FlexPDE Version 7.21/OSXm  12:20:20 Dec  9 2022
+File: Mini_Project_Model.pde  01:30:24 6/18/23
+Title: Part A Mid-Term Mini-Project
+Output: 
+}
+ SUMMARY
+ Bmax=  1.570724
+ Bmin=  1.192524
+ dB=  0.240781
+ Alignment=  1.808762

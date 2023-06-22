@@ -1,0 +1,388 @@
+
+================================================================
+===  FlexPDE Version 6.36s/W32  14:13:44 Jan  8 2015  © 1996-2014 PDE Solutions Inc.
+===  E:\Homework\Magnet Design and Optimization\MiniProject\Mini_Project_Model.pde 16:11:27 4/6/17
+================================================================
+    1| { Fill in the following sections (removing comment marks ! if necessary),
+    2|   and delete those that are unused.}
+    3| TITLE 'Part A Mid-Term Mini-Project'     { the problem identification }
+    4| COORDINATES cartesian2  { coordinate system, 1D,2D,3D, etc }
+    5| VARIABLES        { system variables }
+    6|   A              { choose your own names }
+    7| Global Variables
+    8| Jcoil
+    9| SELECT         { method controls }
+   10| Threads = 4
+   11| Initial Values
+   12| Jcoil = 1e7
+   13| DEFINITIONS    { parameter definitions }
+   14| #include"input.pde"
+    2| Alpha3=0.191888888889
+    3| Alpha2=0.191888888889
+    4| Alpha6=0.418666666667
+   15| 
+   16| B = curl(A)
+   17| Bm = magnitude(B)
+   18| Mu0 = 4*pi*1e-7
+   19| Muiron = 1 + 1507 * exp(-(abs(Bm / 1.443) ^ 3.725))
+   20| Jc = table('Bmax.tbl')
+   21| J = 0
+   22| Converttorad = 2 * pi / 360
+   23| 
+   24| mu=mu0
+   25| !Radii in meters
+   26| Rii = .025
+   27| Rio = .0425
+   28| Roo = .0602
+   29| Rair = 4 * Roo
+   30| Rbeam = .018
+   31| 
+   32| !Angles in radians
+   33| A1 = 15 * Converttorad
+   34| A2 = 15 * Converttorad
+   35| A3 = 10 * Converttorad
+   36| A4 = 5 * Converttorad
+   37| A5 = 20 * Converttorad
+   38| A6 = 25 * Converttorad
+   39| !Alpha2 = 5 * Converttorad
+   40| !Alpha3 = 5 * Converttorad
+   41| !Alpha4 = 5 * Converttorad
+   42| !Alpha6 = 5 * Converttorad
+   43| 
+   44| !Lorentz Forces in coils
+   45| L = 10 !coil length in meters
+   46| Area = 950e-6 !m^2 of coils
+   47| Jvec = vector(0,0,J)
+   48| F=Area*L*cross(Jvec,B)
+   49| 
+   50| !B field calculations
+   51| B1 = 0
+   52| B2 = 100
+   53| Bmax = globalmax(B1)
+   54| Bmin = globalmin(B2)
+   55| dB = (Bmax - Bmin) / Bmax
+   56| 
+   57| Of = .7
+   58| Ff = .6
+   59| Objective=(Jc*of*ff-Jcoil)/Jcoil
+   60| 
+   61| !Determining alignment with respect to x (ideal is when B_x = 0 everywhere)
+   62| B_x= abs(xcomp(Bm))
+   63| Alignment=globalmax(B_x)
+   64| 
+   65| ! INITIAL VALUES
+   66| EQUATIONS        { PDE's, one for each variable }
+   67| A: curl(1/mu*curl(A))=J
+   68| Jcoil: Objective=0
+   69| 
+   70| 
+   71| ! CONSTRAINTS    { Integral constraints }
+   72| BOUNDARIES       { The domain definition }
+   73| REGION 1 "air"
+   74| START(0,0) value(A) = 0  { Walk the domain boundary }
+   75| LINE TO (0,Rair) value(A) = 0
+   76| ARC(CENTER = 0,0) Angle = -90 natural(A) = 0
+   77| line to close
+   78| 
+   79| Region 2 "Backiron"
+   80| Mu = mu0*Muiron
+   81| Start(1.5 * Roo,0)
+   82| Line to (3 * Roo, 0)
+   83| Arc(center = 0,0) to (0, 3 * Roo)
+   84| Line to (0, 1.5 * Roo)
+   85| Arc(center = 0,0) to close
+   86| 
+   87| Region 3 "Saddle Coils"
+   88| J = Jcoil
+   89| !Coil 1:
+   90| Start(Rii,0) Line to (Rio,0)
+   91| Arc(Center = 0,0) to (Rio * cos(A1),Rio * sin(A1))
+   92| Line to (Rii * cos(A1),Rii * sin(A1))
+   93| Arc(Center = 0,0) To Close
+   94| 
+   95| !Coil 2:
+   96| Start(Rii * cos(A1 + Alpha2),Rii * sin(A1 + Alpha2))
+   97| Line to (Rio * cos(A1 + Alpha2), Rio * sin(A1 + Alpha2))
+   98| Arc(Center = 0,0) to (Rio * cos(A1 + A2 + Alpha2), Rio * sin(A1 + A2 + Alpha2))
+   99| Line to (Rii * cos(A1 + A2 + Alpha2), Rii * sin(A1 + A2 + Alpha2))
+  100| Arc(Center = 0,0) to close
+  101| 
+  102| !Coil3:
+  103| Start(Rii * cos(A1 + Alpha2 + A2 + Alpha3),Rii * sin(A1 + Alpha2 + A2 + Alpha3))
+  104| Line to (Rio * cos(A1 + Alpha2 + A2 + Alpha3), Rio * sin(A1 + Alpha2 + A2 + Alpha3))
+  105| Arc(Center = 0,0) to (Rio * cos(A1 + A2 + Alpha2 + A3 + Alpha3), Rio * sin(A1 + A2 + Alpha2 + A3 + Alpha3))
+  106| Line to (Rii * cos(A1 + A2 + Alpha2 + A3 + Alpha3), Rii * sin(A1 + A2 + Alpha2 + A3 + Alpha3))
+  107| Arc(Center = 0,0) to close
+  108| 
+  109| !Coil4:
+  110| Start(Rii * cos(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4),Rii * sin(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4))
+  111| Line to (Rio * cos(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4), Rio * sin(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4))
+  112| Arc(Center = 0,0) to (Rio * cos(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4), Rio * sin(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4))
+  113| Line to (Rii * cos(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4), Rii * sin(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4))
+  114| Arc(Center = 0,0) to close
+  115| 
+  116| {
+  117| !Coil5:
+  118| Start(Rio,0)
+  119| Line to (Roo,0)
+  120| Arc(Center = 0,0) To (Roo * cos(A5), Roo * sin(A5))
+  121| Line to (Rio * cos(A5), Rio * sin(A5))
+  122| Arc(Center = 0,0) to close
+  123| 
+  124| !Coil6:
+  125| Start(Rio * cos(A5 + Alpha6), Rio * sin(A5 + Alpha6))
+  126| Line to (Roo * cos(A5 + Alpha6), Roo * sin(A5 + Alpha6))
+  127| Arc(Center = 0,0) to (Roo * cos(A5 + Alpha6 + A6), Roo * sin(A5 + Alpha6 + A6))
+  128| Line to (Rio * cos(A5 + Alpha6 + A6), Rio * sin(A5 + Alpha6 + A6))
+  129| Arc(Center = 0,0) to close
+  130| }
+  131| Region 4 "Beam Area"
+  132| B1 = Bm
+  133| B2 = Bm
+  134| Start(0,0)
+  135| Line to (0,Rbeam)
+  136| Arc(Center = 0,0) Angle = -90
+  137| line to close
+  138| 
+  139| ! TIME 0 TO 1    { if time dependent }
+  140| MONITORS         { show progress }
+  141| PLOTS            { save result displays }
+  142| CONTOUR(A)
+  143| Contour(Bm) on "Beam Area" painted
+  144| Vector(B)
+  145| Contour(Mu) painted
+  146| Vector(F) on "Saddle Coils"
+  147| 
+  148| Summary
+  149| export file = "Output.txt"
+  150| Report(Bmax) !as "Bmax in beam area"
+  151| Report(Bmin) !as "Bmin in beam area"
+  152| Report(dB) !as "dB in beam area"
+  153| !Report(B_x)
+  154| Report(Alignment) 
+  155| 
+  156| !Report(globalmin(Mu0)) as "Mu0 min"
+  157| !Report(globalmax(Mu0)) as "Mu0 max"
+  158| !Report(globalmax_X(Mu0))
+  159| !Report(globalmax_Y(Mu0))
+  160| END
+FlexPDE Student Version 6.36s/W32 3D
+© 1996-2014 PDE Solutions Inc.
+FlexPDE Student Version 6.36s/W32 3D
+© 1996-2014 PDE Solutions Inc.
+FlexPDE Student Version 6.36s/W32 3D
+© 1996-2014 PDE Solutions Inc.
+
+SUMMARIZE 37 PARAMETERS (NO COMMON SUBEXPRESSION ELIMINATION)
+   Param         Compartment       Complexity     Memory
+--------------------------------------------------------------
+         ALPHA4      0                    1         56
+         ALPHA3      0                    1         56
+         ALPHA2      0                    1         56
+         ALPHA6      0                    1         56
+              B      0                    5        280
+             BM      0                    6        336
+            MU0      0                    1         56
+         MUIRON      0                   17        952
+             JC      0                    1         56
+              J      1                    1         56
+              J      2                    1         56
+              J      3                    1         56
+              J      4                    1         56
+   CONVERTTORAD      0                    1         56
+             MU      1                    1         56
+             MU      2                   19       1064
+             MU      3                    1         56
+             MU      4                    1         56
+            RII      0                    1         56
+            RIO      0                    1         56
+            ROO      0                    1         56
+           RAIR      0                    1         56
+          RBEAM      0                    1         56
+             A1      0                    1         56
+             A2      0                    1         56
+             A3      0                    1         56
+             A4      0                    1         56
+             A5      0                    1         56
+             A6      0                    1         56
+              L      0                    1         56
+           AREA      0                    1         56
+           JVEC      1                    1         56
+           JVEC      2                    1         56
+           JVEC      3                    4        224
+           JVEC      4                    1         56
+              F      1                    1         56
+              F      2                    1         56
+              F      3                   12        672
+              F      4                    1         56
+             B1      1                    1         56
+             B1      2                    1         56
+             B1      3                    1         56
+             B1      4                    6        336
+             B2      1                    1         56
+             B2      2                    1         56
+             B2      3                    1         56
+             B2      4                    6        336
+           BMAX      0                    1         56
+           BMIN      0                    1         56
+             DB      0                    5        280
+             OF      0                    1         56
+             FF      0                    1         56
+      OBJECTIVE      0                    7        392
+            B_X      0                    8        448
+      ALIGNMENT      0                    1         56
+
+SUMMARIZE EQUATIONS
+
+                                                    BASE         CSE
+ EQUATION  COMPARTMENT              FUNCTION     COMPLEXITY  COMPLEXITY    MEMORY
+----------------------------------------------------------------------------------
+     1          1                     Source          1            2          112
+     1          1                   Galerkin          9            9          504
+     1          1       Var  1      Jacobian          9            9          504
+     1          1       Var  2      Jacobian          1            1           56
+     1          1              Surf Galerkin         10           10          560
+     1          1       Var  1 Surf Jacobian         10            9          504
+     1          1       Var  2 Surf Jacobian          1            1           56
+     1          2                     Source          1            2          112
+     1          2                   Galerkin         45           45         2520
+     1          2       Var  1      Jacobian        221          221        12376
+     1          2       Var  2      Jacobian          1            1           56
+     1          2              Surf Galerkin         46           46         2576
+     1          2       Var  1 Surf Jacobian        222          221        12376
+     1          2       Var  2 Surf Jacobian          1            1           56
+     1          3                     Source          1            2          112
+     1          3                   Galerkin         12           12          672
+     1          3       Var  1      Jacobian          9            9          504
+     1          3       Var  2      Jacobian          3            3          168
+     1          3              Surf Galerkin         10           10          560
+     1          3       Var  1 Surf Jacobian         10            9          504
+     1          3       Var  2 Surf Jacobian          1            3          168
+     1          4                     Source          1            2          112
+     1          4                   Galerkin          9            9          504
+     1          4       Var  1      Jacobian          9            9          504
+     1          4       Var  2      Jacobian          1            1           56
+     1          4              Surf Galerkin         10           10          560
+     1          4       Var  1 Surf Jacobian         10            9          504
+     1          4       Var  2 Surf Jacobian          1            1           56
+
+EQUATION 1 PARAMETER DEPENDENCIES:
+ BM              MU0             MUIRON          J               MU             
+
+SUMMARIZE BOUNDARY CONDITIONS
+
+    BC     COMPARTMENT              FUNCTION     COMPLEXITY    MEMORY
+----------------------------------------------------------------------
+     1          1              Surf Galerkin          1         56
+     1          1       Var  1 Surf Jacobian          1         56
+     1          1       Var  2 Surf Jacobian          1         56
+     1          2              Surf Galerkin          1         56
+     1          2       Var  1 Surf Jacobian          1         56
+     1          2       Var  2 Surf Jacobian          1         56
+     1          3              Surf Galerkin          1         56
+     1          3       Var  1 Surf Jacobian          1         56
+     1          3       Var  2 Surf Jacobian          1         56
+     2          1              Surf Galerkin          1         56
+     2          1       Var  1 Surf Jacobian          1         56
+     2          1       Var  2 Surf Jacobian          1         56
+     2          2              Surf Galerkin          1         56
+     2          2       Var  1 Surf Jacobian          1         56
+     2          2       Var  2 Surf Jacobian          1         56
+     2          3              Surf Galerkin          1         56
+     2          3       Var  1 Surf Jacobian          1         56
+     2          3       Var  2 Surf Jacobian          1         56
+     2          4              Surf Galerkin          1         56
+     2          4       Var  1 Surf Jacobian          1         56
+     2          4       Var  2 Surf Jacobian          1         56
+
+--------------------------------
+SUMMARIZE FITS AND INTEGRALS
+---------------------------------
+                                  REGION/       BASE        CSE
+    FIT         KIND            COMPARTMENT  COMPLEXITY  COMPLEXITY    MEMORY
+------------------------------------------------------------------------------
+     1            GlobalMax          1              6          6          336
+     1            GlobalMax          2              6          6          336
+     1            GlobalMax          3              6          6          336
+     1            GlobalMax          4              6          6          336
+     2            GlobalMin          1              6          6          336
+     2            GlobalMin          2              6          6          336
+     2            GlobalMin          3              6          6          336
+     2            GlobalMin          4              6          6          336
+     3            GlobalMax          1              8          8          448
+     3            GlobalMax          2              8          8          448
+     3            GlobalMax          3              8          8          448
+     3            GlobalMax          4              8          8          448
+
+SUMMARIZE PLOT EQUATIONS
+
+                                     BASE        CSE
+   PLOT    ARGUMENT COMPARTMENT  COMPLEXITY  COMPLEXITY    MEMORY
+------------------------------------------------------------------
+     1          1          1          1          1           56
+     1          1          2          1          1           56
+     1          1          3          1          1           56
+     1          1          4          1          1           56
+     2          1          1          6          6          336
+     2          1          2          6          6          336
+     2          1          3          6          6          336
+     2          1          4          6          6          336
+     3          1          1          5          5          280
+     3          1          2          5          5          280
+     3          1          3          5          5          280
+     3          1          4          5          5          280
+     4          1          1          1          1           56
+     4          1          2         19         19         1064
+     4          1          3          1          1           56
+     4          1          4          1          1           56
+     5          1          1          1          1           56
+     5          1          2          1          1           56
+     5          1          3         12         13          728
+     5          1          4          1          1           56
+
+==UNUSED== PARAMETER DEFINITIONS:
+ ALPHA6          JC              CONVERTTORAD    A5              A6             
+ B1              B2              OF              FF              OBJECTIVE      
+ B_X            
+
+Lanczos/DInv ITERATION 13, RNORM=5.47755e-005, XNORM=127.322, 0 MS/IT 0.650787 uS/NODE
+NEWTON STEP 1 NORM=0.000446414
+Lanczos/DInv ITERATION 25, RNORM=0.000565709, XNORM=161.667, 0 MS/IT 0.609137 uS/NODE
+NEWTON STEP 2 NORM=0.000449432
+Lanczos/DInv ITERATION 13, RNORM=0.0163059, XNORM=202.866, 0 MS/IT 0.780945 uS/NODE
+NEWTON STEP 3 NORM=0.00445558
+Lanczos/DInv ITERATION 13, RNORM=0.00059525, XNORM=249.573, 0 MS/IT 0.650787 uS/NODE
+NEWTON STEP 4 NORM=0.00298553
+Lanczos/DInv ITERATION 13, RNORM=0.00295843, XNORM=296.992, 0 MS/IT 0.650787 uS/NODE
+NEWTON STEP 5 NORM=0.00287536
+Lanczos/DInv ITERATION 13, RNORM=0.00213889, XNORM=334.123, 0 MS/IT 0.650787 uS/NODE
+NEWTON STEP 6 NORM=0.00227238
+Lanczos/DInv ITERATION 13, RNORM=0.00793525, XNORM=341.566, 0 MS/IT 0.52063 uS/NODE
+NEWTON STEP 7 NORM=0.00338232
+Lanczos/DInv ITERATION 13, RNORM=0.00202525, XNORM=295.489, 0 MS/IT 0.52063 uS/NODE
+NEWTON STEP 8 NORM=0.00438742
+Lanczos/DInv ITERATION 13, RNORM=0.00248631, XNORM=188.468, 0 MS/IT 0.52063 uS/NODE
+NEWTON STEP 9 NORM=0.00523859
+Lanczos/DInv ITERATION 13, RNORM=0.00091147, XNORM=65.6009, 0 MS/IT 0.52063 uS/NODE
+NEWTON STEP 10 NORM=0.00521548
+Lanczos/DInv ITERATION 26, RNORM=0.00151994, XNORM=6.24946, 0 MS/IT 0.52063 uS/NODE
+NEWTON STEP 11 NORM=0.00548743
+Lanczos/DInv ITERATION 86, RNORM=1.07976e-009, XNORM=0.04694, 0 MS/IT 0.550899 uS/NODE
+NEWTON STEP 12 NORM=0.00166761
+Lanczos/DInv ITERATION 90, RNORM=2.54208e-010, XNORM=0.00156904, 0 MS/IT 0.545215 uS/NODE
+NEWTON STEP 13 NORM=0.000192134
+Lanczos/DInv ITERATION 80, RNORM=1.91876e-011, XNORM=9.04459e-005, 0 MS/IT 0.549915 uS/NODE
+NEWTON STEP 14 NORM=5.01709e-005
+Lanczos/DInv ITERATION 52, RNORM=5.25516e-010, XNORM=1.8203e-005, 0 MS/IT 0.553169 uS/NODE
+NEWTON STEP 15 NORM=1.29782e-005
+Lanczos/DInv ITERATION 44, RNORM=1.69299e-009, XNORM=4.24443e-006, 0 MS/IT 0.576834 uS/NODE
+NEWTON STEP 16 NORM=3.31197e-006
+Lanczos/DInv ITERATION 44, RNORM=2.56946e-010, XNORM=1.04997e-006, 0 MS/IT 0.576834 uS/NODE
+NEWTON STEP 17 NORM=8.41457e-007
+RMS Spatial Errors  2.027e-4
+Lanczos/DInv ITERATION 90, RNORM=6.8229e-011, XNORM=0.000245889, 0 MS/IT 0.453196 uS/NODE
+NEWTON STEP 1 NORM=5.01455e-007
+Lanczos/DInv ITERATION 23, RNORM=3.42289e-010, XNORM=8.7023e-008, 0 MS/IT 0.428056 uS/NODE
+NEWTON STEP 2 NORM=3.39405e-009
+RMS Spatial Errors  2.901e-5
+DO_NEXTSTAGE pde 02EEC228  MAXSTAGE=0

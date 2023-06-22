@@ -1,0 +1,49 @@
+FlexPDE Version 7.21/OSXm  12:20:20 Dec  9 2022
+(Times listed are wall-clock times, not charged CPU).
+
+START /Users/nhanguyen/Downloads/MiniProject/Mini_Project_Model.pde  01:30:24 6/18/23
+ +00:00:01| Mesh Generation Complete
+ +00:00:01| Mesh dump written to /Users/nhanguyen/Downloads/MiniProject/Mini_Project_Model_output/Mini_Project_Model_initialmesh.xfr
+Using 4 Threads  Cubic Curvature 
+ +00:00:01| (1)Newton Step 1 Error= 0.744084 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 2 Error= 0.840843 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 3 Error= 0.757653 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 4 Error= 0.741870 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 5 Error= 0.730512 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 6 Error= 0.721665 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 7 Error= 0.714634 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 8 Error= 0.708791 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 9 Error= 0.703959 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 10 Error= 0.700186 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 11 Error= 0.697217 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 12 Error= 0.696119 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 13 Error= 0.827086 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 14 Error= 0.674387 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 15 Error= 0.673832 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 16 Error= 0.673278 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 17 Error= 0.671948 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 18 Error= 0.670376 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 19 Error= 0.668709 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 20 Error= 0.667028 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 21 Error= 0.665486 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 22 Error= 0.664527 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 23 Error= 0.665891 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 24 Error= 0.665022 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 25 Error= 0.647354 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 26 Error= 0.645873 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 27 Error= 0.789452 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 28 Error= 0.641641 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 29 Error= 0.640097 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 30 Error= 0.638461 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 31 Error= 0.636901 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 32 Error= 0.635700 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 33 Error= 0.635330 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 34 Error= 0.636371 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 35 Error= 0.639623 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 36 Error= 0.659803 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 37 Error= 0.626934 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 38 Error= 0.620434 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 39 Error= 0.623912 Lanczos/DInv(11)
+ +00:00:01| (1)Newton Step 40 Error= 0.626828 Lanczos/DInv(11)
+ +00:00:01| GRID 1 Nodes=172 Cells=298 DOF=1408 RMS ERR= 0.001729 MAX ERR= 0.003168 MEM=4908 KiB
+ +00:00:02| --DONE-- 01:30:26 6/18/23

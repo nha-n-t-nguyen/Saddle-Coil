@@ -1,0 +1,10 @@
+{
+FlexPDE Version 6.36s/W32  14:13:44 Jan  8 2015
+Mini_Project_Model.pde  16:08:27 4/6/17
+Title: SUMMARY
+}
+ SUMMARY
+ Bmax=  4.463208
+ Bmin=  4.248869
+ dB=  0.048023
+ Alignment=  5.162395

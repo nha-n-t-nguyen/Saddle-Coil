@@ -1,0 +1,162 @@
+{ Fill in the following sections (removing comment marks ! if necessary),
+  and delete those that are unused.}
+TITLE 'Part A Mid-Term Mini-Project'     { the problem identification }
+COORDINATES cartesian2  { coordinate system, 1D,2D,3D, etc }
+VARIABLES        { system variables }
+  A              { choose your own names }
+Global Variables
+Jcoil
+SELECT         { method controls }
+Threads = 4
+Initial Values
+Jcoil = 1e7
+DEFINITIONS    { parameter definitions }
+#include"input.pde"
+
+B = curl(A)
+Bm = magnitude(B)
+Mu0 = 4*pi*1e-7
+Muiron = 1 + 1507 * exp(-(abs(Bm / 1.443) ^ 3.725))
+Jc = table('Bmax.tbl')
+J = 0
+
+!Creating a degree 
+Converttorad = 2 * pi / 360
+
+mu=mu0
+!Radii in meters
+Rii = .025
+Rio = .0425
+Roo = .0602
+Rair = 4 * Roo
+Rbeam = .018
+
+!Angles in radians
+A1 = 15 * Converttorad
+A2 = 15 * Converttorad
+A3 = 10 * Converttorad
+A4 = 5 * Converttorad
+A5 = 20 * Converttorad
+A6 = 25 * Converttorad
+!Alpha2 = 5 * Converttorad
+!Alpha3 = 5 * Converttorad
+!Alpha4 = 5 * Converttorad
+!Alpha6 = 5 * Converttorad
+
+!Lorentz Forces in coils
+L = 10 !coil length in meters
+Area = 950e-6 !m^2 of coils
+Jvec = vector(0,0,J)
+F=Area*L*cross(Jvec,B)
+
+!B field calculations
+B1 = 0
+B2 = 100
+Bmax = globalmax(B1)
+Bmin = globalmin(B2)
+dB = (Bmax - Bmin) / Bmax
+
+Of = .7
+Ff = .6
+Objective=(Jc*of*ff-Jcoil)/Jcoil
+
+!Determining alignment with respect to x (ideal is when B_x = 0 everywhere)
+B_x= abs(xcomp(Bm))
+Alignment=globalmax(B_x)
+
+! INITIAL VALUES
+EQUATIONS        { PDE's, one for each variable }
+A: curl(1/mu*curl(A))=J
+Jcoil: Objective=0
+
+
+! CONSTRAINTS    { Integral constraints }
+BOUNDARIES       { The domain definition }
+REGION 1 "air"
+START(0,0) value(A) = 0  { Walk the domain boundary }
+LINE TO (0,Rair) value(A) = 0
+ARC(CENTER = 0,0) Angle = -90 natural(A) = 0
+line to close
+
+Region 2 "Backiron"
+Mu = mu0*Muiron
+Start(1.5 * Roo,0)
+Line to (3 * Roo, 0)
+Arc(center = 0,0) to (0, 3 * Roo)
+Line to (0, 1.5 * Roo)
+Arc(center = 0,0) to close
+
+Region 3 "Saddle Coils"
+J = Jcoil
+!Coil 1:
+Start(Rii,0) Line to (Rio,0)
+Arc(Center = 0,0) to (Rio * cos(A1),Rio * sin(A1))
+Line to (Rii * cos(A1),Rii * sin(A1))
+Arc(Center = 0,0) To Close
+
+!Coil 2:
+Start(Rii * cos(A1 + Alpha2),Rii * sin(A1 + Alpha2))
+Line to (Rio * cos(A1 + Alpha2), Rio * sin(A1 + Alpha2))
+Arc(Center = 0,0) to (Rio * cos(A1 + A2 + Alpha2), Rio * sin(A1 + A2 + Alpha2))
+Line to (Rii * cos(A1 + A2 + Alpha2), Rii * sin(A1 + A2 + Alpha2))
+Arc(Center = 0,0) to close
+
+!Coil3:
+Start(Rii * cos(A1 + Alpha2 + A2 + Alpha3),Rii * sin(A1 + Alpha2 + A2 + Alpha3))
+Line to (Rio * cos(A1 + Alpha2 + A2 + Alpha3), Rio * sin(A1 + Alpha2 + A2 + Alpha3))
+Arc(Center = 0,0) to (Rio * cos(A1 + A2 + Alpha2 + A3 + Alpha3), Rio * sin(A1 + A2 + Alpha2 + A3 + Alpha3))
+Line to (Rii * cos(A1 + A2 + Alpha2 + A3 + Alpha3), Rii * sin(A1 + A2 + Alpha2 + A3 + Alpha3))
+Arc(Center = 0,0) to close
+
+!Coil4:
+Start(Rii * cos(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4),Rii * sin(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4))
+Line to (Rio * cos(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4), Rio * sin(A1 + Alpha2 + A2 + Alpha3 + A3 + Alpha4))
+Arc(Center = 0,0) to (Rio * cos(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4), Rio * sin(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4))
+Line to (Rii * cos(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4), Rii * sin(A1 + A2 + Alpha2 + A3 + Alpha3 + A4 + Alpha4))
+Arc(Center = 0,0) to close
+
+{
+!Coil5:
+Start(Rio,0)
+Line to (Roo,0)
+Arc(Center = 0,0) To (Roo * cos(A5), Roo * sin(A5))
+Line to (Rio * cos(A5), Rio * sin(A5))
+Arc(Center = 0,0) to close
+
+!Coil6:
+Start(Rio * cos(A5 + Alpha6), Rio * sin(A5 + Alpha6))
+Line to (Roo * cos(A5 + Alpha6), Roo * sin(A5 + Alpha6))
+Arc(Center = 0,0) to (Roo * cos(A5 + Alpha6 + A6), Roo * sin(A5 + Alpha6 + A6))
+Line to (Rio * cos(A5 + Alpha6 + A6), Rio * sin(A5 + Alpha6 + A6))
+Arc(Center = 0,0) to close
+}
+Region 4 "Beam Area"
+B1 = Bm
+B2 = Bm
+Start(0,0)
+Line to (0,Rbeam)
+Arc(Center = 0,0) Angle = -90
+line to close
+
+! TIME 0 TO 1    { if time dependent }
+MONITORS         { show progress }
+PLOTS            { save result displays }
+CONTOUR(A)
+Contour(Bm) on "Beam Area" painted
+Vector(B)
+Contour(Mu) painted
+Vector(F) on "Saddle Coils"
+
+Summary
+export file = "Output.txt"
+Report(Bmax) !as "Bmax in beam area"
+Report(Bmin) !as "Bmin in beam area"
+Report(dB) !as "dB in beam area"
+!Report(B_x)
+Report(Alignment) 
+
+!Report(globalmin(Mu0)) as "Mu0 min"
+!Report(globalmax(Mu0)) as "Mu0 max"
+!Report(globalmax_X(Mu0))
+!Report(globalmax_Y(Mu0))
+END
